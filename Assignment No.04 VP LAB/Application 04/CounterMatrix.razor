@@ -1,0 +1,43 @@
+﻿@page "/counter-matrix"
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem; max-width: 500px;">
+    <div class="card-header-accent" style="background-color: #007bff; color: #ffffff; font-weight: 600; text-align: center; padding: 0.75rem 1.25rem; font-size: 1.1rem;">
+        Counter System
+    </div>
+
+    <div class="card-body-content" style="padding: 2.5rem 2rem;">
+
+        <div class="counter-display text-center mb-5">
+            <h1 class="display-1 fw-bold" style="color: #212529; font-size: 5.5rem; margin-bottom: 0;">
+                @MetricStateRegister
+            </h1>
+            <span class="text-muted text-uppercase small fw-bold tracking-wider" style="letter-spacing: 1px; font-size: 0.8rem; opacity: 0.7;">
+                Synchronized Counter
+            </span>
+        </div>
+
+        <div class="row g-3 align-items-center">
+            <div class="col-6">
+                <button class="btn btn-primary w-100 py-2.5 fw-bold text-uppercase"
+                        style="background-color: #007bff; border: none; letter-spacing: 0.5px; font-size: 0.9rem;"
+                        @onclick="IncrementRegisterState">
+                    Increment
+                </button>
+            </div>
+            <div class="col-6">
+                <input type="number"
+                       class="form-control form-control-lg text-center fw-bold"
+                       style="border-radius: 6px; border: 1px solid #ced4da; color: #4e73df;"
+                       @bind="MetricStateRegister" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int MetricStateRegister { get; set; } = 0;
+    private void IncrementRegisterState() => MetricStateRegister++;
+}

@@ -1,0 +1,67 @@
+﻿@page "/auth-login"
+@inject AuthenticationStateService SessionEngine
+@implements IDisposable
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem; max-width: 500px;">
+    <div class="card-header-accent" style="background-color: #007bff; color: #ffffff; font-weight: 600; text-align: center; padding: 0.75rem 1.25rem; font-size: 1.1rem;">
+        Authentication Terminal
+    </div>
+
+    <div class="card-body-content" style="padding: 2.5rem 2rem;">
+        @if (!SessionEngine.IsAuthenticated)
+        {
+            <div class="mb-4 text-center">
+                <label class="form-label text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px; display: block; margin-bottom: 0.5rem;">
+                   
+                </label>
+                <input type="text"
+                       class="form-control form-control-lg text-center"
+                       style="border-radius: 6px; border: 1px solid #ced4da;"
+                       @bind="UserInputBuffer"
+                       placeholder="Enter User Name" />
+            </div>
+
+            <button class="btn btn-primary w-100 py-2.5 fw-bold text-uppercase"
+                    style="background-color: #007bff; border: none; letter-spacing: 0.5px;"
+                    @onclick="ExecuteLoginHandshake">
+                Secure Log In
+            </button>
+        }
+        else
+        {
+            <div class="p-3 bg-light rounded border text-center mb-4" style="background-color: #f8f9fa; border-color: #e3e6f0 !important;">
+                <p class="text-muted mb-0 small fw-bold text-uppercase" style="letter-spacing: 0.5px;">
+                    Active User
+                </p>
+                <h3 class="mt-2 mb-0" style="color: #4e73df; font-weight: 700;">
+                    @SessionEngine.ActiveAccountHandle
+                </h3>
+            </div>
+
+            <button class="btn btn-outline-danger w-100 py-2.5 fw-bold text-uppercase"
+                    style="letter-spacing: 0.5px; border-radius: 6px; border: 1px solid #dc3545;"
+                    @onclick="SessionEngine.DestroyActiveSessionContext">
+               Log Out
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    private string UserInputBuffer { get; set; } = string.Empty;
+
+    private void ExecuteLoginHandshake()
+    {
+        if (!string.IsNullOrWhiteSpace(UserInputBuffer))
+        {
+            SessionEngine.RunSecureLoginHandshake(UserInputBuffer.Trim());
+            UserInputBuffer = string.Empty;
+        }
+    }
+
+    protected override void OnInitialized() => SessionEngine.OnStateChangedPipeline += StateHasChanged;
+    public void Dispose() => SessionEngine.OnStateChangedPipeline -= StateHasChanged;
+}

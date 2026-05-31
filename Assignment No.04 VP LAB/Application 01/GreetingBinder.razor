@@ -1,0 +1,30 @@
+﻿@page "/greeting-binder"
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem;">
+    <div class="card-header-accent">
+        Interactive Greeting
+    </div>
+
+    <div class="card-body-content">
+        <div class="mb-4 col-md-8 mx-auto text-center">
+            <label class="form-label text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">Enter Your Name</label>
+            <input type="text" class="form-control form-control-lg text-center" @bind="UserName" @bind:event="oninput" placeholder="" />
+        </div>
+
+        <div class="p-3 bg-light rounded border text-center mt-4" style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
+            <h4 class="fw-light mb-0" style="color: #212529;">
+                <span style="color: #198754; font-weight: bold;">@GreetingMessage</span>
+            </h4>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string UserName { get; set; } = string.Empty;
+
+    private string GreetingMessage => string.IsNullOrWhiteSpace(UserName)
+        ? "Awaiting response..."
+        : $"Hello, {UserName}";
+}

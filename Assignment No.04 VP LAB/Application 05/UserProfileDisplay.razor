@@ -1,0 +1,26 @@
+﻿@page "/auth-profile"
+@inject AuthenticationStateService SessionEngine
+@implements IDisposable
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="glass-panel text-center mx-auto mt-2" style="max-width: 500px; border-top: 3px solid var(--neon-accent);">
+    <h5 class="text-muted mb-3">Downstream Context Diagnostic Node</h5>
+
+    @if (SessionEngine.IsAuthenticated)
+    {
+        <div class="p-3 rounded animate-pulse" style="background: rgba(0, 245, 212, 0.05);">
+            <p class="mb-0 text-white">System Token Match confirmed. Synchronized operations running for operator: <strong style="color: var(--neon-accent);">@SessionEngine.ActiveAccountHandle</strong></p>
+        </div>
+    }
+    else
+    {
+        <p class="text-danger mb-0 small"><i class="bi bi-shield-slash me-1"></i> Critical Exception: Null Session Token state. Handshake initialization routine required.</p>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized() => SessionEngine.OnStateChangedPipeline += StateHasChanged;
+    public void Dispose() => SessionEngine.OnStateChangedPipeline -= StateHasChanged;
+}

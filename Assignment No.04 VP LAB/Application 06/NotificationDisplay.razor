@@ -1,0 +1,60 @@
+﻿@page "/notify-display-panel"
+@inject NotificationService EngineWorker
+@inject NotificationConfig StructuralStyleReference
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem; max-width: 550px;">
+    <div class="card-header-accent" style="background-color: #007bff; color: #ffffff; font-weight: 600; text-align: center; padding: 0.85rem 1.25rem; font-size: 1.15rem; border-bottom: 1px solid #0069d9;">
+        Live Log 
+    </div>
+
+    <div class="card-body-content" style="padding: 1.5rem;">
+
+        <button class="btn btn-primary w-100 mb-4 py-2 fw-bold text-uppercase"
+                style="background-color: #007bff; border: none; letter-spacing: 0.5px; font-size: 0.9rem;"
+                @onclick="HandleRefreshClick">
+            Refresh 
+        </button>
+
+        <div class="notification-stream" style="max-height: 350px; overflow-y: auto;">
+            @if (FetchedSystemBroadcastLogs != null)
+            {
+                @foreach (var broadcastItem in FetchedSystemBroadcastLogs)
+                {
+                    <div class="p-3 mb-3 rounded border animate-fade-in"
+                         style="background-color: #f8f9fa; border-left: 4px solid #007bff !important; border: 1px solid #e3e6f0;">
+                        <span class="d-block fw-bold text-uppercase small mb-1" style="color: #4e73df; letter-spacing: 0.5px;">
+                            Active Dispatch Notification:
+                        </span>
+                        <span style="color: #212529; font-size: 0.95rem; font-weight: 500;">
+                            @broadcastItem
+                        </span>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string>? FetchedSystemBroadcastLogs { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchBroadcastsFromService();
+    }
+
+    // This is the method the button is looking for
+    private async Task HandleRefreshClick()
+    {
+        await FetchBroadcastsFromService();
+        StateHasChanged(); // This forces the UI to update
+    }
+
+    private async Task FetchBroadcastsFromService()
+    {
+        FetchedSystemBroadcastLogs = await EngineWorker.ExtractActiveSystemLogsAsync();
+    }
+}

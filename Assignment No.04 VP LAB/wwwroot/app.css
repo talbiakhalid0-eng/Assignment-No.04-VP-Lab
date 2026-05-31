@@ -1,0 +1,10 @@
+/* Apply the styles to the body AND the main content containers */
+.dark-theme, .dark-theme body {
+	background-color: #121212 !important;
+	color: #ffffff !important;
+}
+
+.light-theme, .light-theme body {
+	background-color: #ffffff !important;
+	color: #000000 !important;
+}

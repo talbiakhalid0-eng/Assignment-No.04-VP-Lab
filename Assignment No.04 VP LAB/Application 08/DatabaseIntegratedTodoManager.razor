@@ -1,0 +1,52 @@
+﻿@page "/database-todo"
+@using Microsoft.AspNetCore.Components.Web
+@inject TodoDatabaseService DB
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="glass-panel mx-auto" style="max-width: 650px;">
+    <h3 style="color: var(--neon-accent);" class="text-center mb-1">Persistent Infrastructure Panel</h3>
+    <p class="text-muted text-center small mb-4">Direct SQL Server Transaction Syncs running over ADO.NET</p>
+
+    <div class="input-group mb-4">
+        <input type="text" class="form-control neon-input" placeholder="Append transaction data payload..."
+               @bind="InputText" @onkeyup="HandleKey" />
+        <button class="btn btn-neon-emerald" type="button" @onclick="SaveTask">Save Frame Row</button>
+    </div>
+
+    <div class="database-rendering-stream my-3" style="max-height: 300px; overflow-y: auto;">
+        @if (Tasks == null || Tasks.Count == 0)
+        {
+            <p class="text-muted text-center py-4 italic">Zero active rows matched inside database schema.</p>
+        }
+        else
+        {
+            @foreach (var item in Tasks)
+            {
+                <div class="d-flex justify-content-between align-items-center p-2 mb-2 rounded border"
+                     style="background: rgba(255,255,255,0.01); border-color: var(--border-glass) !important;">
+                    <span class="text-white-50">
+                        <small class="text-muted font-monospace me-2">ID: @item.TaskId</small> @item.TaskDescription
+                    </span>
+                    <button class="btn btn-sm btn-outline-danger py-0 px-2" @onclick="() => DropTask(item.TaskId)">
+                        🗑️
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private List<TodoTaskDataModel> Tasks { get; set; } = new();
+    private string InputText { get; set; } = string.Empty;
+
+    protected override void OnInitialized() => Refresh();
+    private void Refresh() => Tasks = DB.FetchTasks();
+
+    private void SaveTask()
+    {
+        if (!string.IsNullOrWhiteSpace(InputText)) { DB.InsertTask(InputText.Trim()); InputText = string.Empty; Refresh(); }
+    }
+    private void DropTask(int id) { DB.DeleteTask(id); Refresh(); }
+    private void HandleKey(KeyboardEventArgs e) { if (e.Key == "Enter") SaveTask(); }
+}

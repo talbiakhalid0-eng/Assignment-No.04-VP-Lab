@@ -1,0 +1,68 @@
+﻿@page "/registration-form"
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem;">
+    <div class="card-header-accent" style="background-color: #007bff; color: #ffffff; font-weight: 600; text-align: center; padding: 0.75rem 1.25rem; font-size: 1.1rem;">
+        Validation Form
+    </div>
+
+    <div class="card-body-content" style="padding: 2.5rem 2rem;">
+        <EditForm Model="@Profile" OnValidSubmit="ProcessValidFormSubmission">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">First Name</label>
+                <InputText class="form-control form-control-lg" style="border-radius: 6px; border: 1px solid #ced4da;" @bind-Value="Profile.FirstName" />
+                <ValidationMessage For="@(() => Profile.FirstName)" class="text-danger small mt-1" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">Last Name</label>
+                <InputText class="form-control form-control-lg" style="border-radius: 6px; border: 1px solid #ced4da;" @bind-Value="Profile.LastName" />
+                <ValidationMessage For="@(() => Profile.LastName)" class="text-danger small mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-muted small fw-bold text-uppercase" style="letter-spacing: 0.5px;">Email Address</label>
+                <InputText class="form-control form-control-lg" style="border-radius: 6px; border: 1px solid #ced4da;" @bind-Value="Profile.Email" />
+                <ValidationMessage For="@(() => Profile.Email)" class="text-danger small mt-1" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold text-uppercase" style="background-color: #007bff; border: none; letter-spacing: 0.5px;">
+                Submit Registration
+            </button>
+        </EditForm>
+
+        @if (FormCommittedSuccessfully)
+        {
+            <div class="alert alert-success mt-4 border text-center" style="background-color: #d1e7dd; color: #0f5132; border-color: #badbcc; border-radius: 6px;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <strong>Submission Successful!</strong>
+                <div class="small mt-1">Account Registered For @Profile.FirstName</div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private UserProfileModel Profile { get; set; } = new();
+    private bool FormCommittedSuccessfully { get; set; } = false;
+
+    private void ProcessValidFormSubmission() => FormCommittedSuccessfully = true;
+
+    // Nested or separate class depending on your setup
+    public class UserProfileModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "First name is mandatory.")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Last name is mandatory.")]
+        public string LastName { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email address is mandatory.")]
+        [System.ComponentModel.DataAnnotations.EmailAddress(ErrorMessage = "Invalid email format structure.")]
+        public string Email { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,106 @@
+﻿@page "/todo-app"
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+
+
+<div class="interactive-card-frame animate-fade-in" style="margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border-radius: 8px; overflow: hidden;">
+
+    <div class="card-header-accent" style="background-color: #007bff; color: white; text-align: center; font-weight: bold; padding: 1.1rem; font-size: 1.3rem; letter-spacing: 0.5px;">
+        To Do List
+    </div>
+
+    <div class="card-body-content" style="background: white; padding: 2rem; border: 1px solid #e9ecef; border-top: none; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+
+        <div class="input-group mb-4" style="box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+            <input type="text"
+                   class="form-control"
+                   @bind="newTaskText"
+                   @bind:event="oninput"
+                   @onkeyup="HandleKeyUp"
+                   placeholder="Enter New Task."
+                   style="border-top-right-radius: 0; border-bottom-right-radius: 0; padding: 0.6rem 1rem; border-color: #ced4da;" />
+
+            <button class="btn btn-primary"
+                    @onclick="AddTask"
+                    disabled="@string.IsNullOrWhiteSpace(newTaskText)"
+                    style="background-color: #007bff; border-color: #007bff; border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0.6rem 1.8rem; font-weight: bold;">
+                Add Task
+            </button>
+        </div>
+
+        <div class="task-list-container d-flex flex-column gap-3">
+            @if (tasks.Count == 0)
+            {
+                <div class="text-center py-3 text-muted" style="font-size: 0.95rem;">No tasks active.</div>
+            }
+            else
+            {
+                @foreach (var task in tasks)
+                {
+                    <div class="d-flex justify-content-between align-items-center"
+                         style="padding: 1rem 1.2rem; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.01);">
+
+                        <span style="font-size: 1.05rem; color: #3b5998; font-weight: 500;">@task</span>
+
+                        <button type="button"
+                                @onclick="() => RemoveTask(task)"
+                                style="background: none; border: none; color: #dc3545; font-size: 1.3rem; font-weight: bold; padding: 0; line-height: 1; cursor: pointer; transition: color 0.2s;"
+                                onmouseover="this.style.color='#a71d2a'"
+                                onmouseout="this.style.color='#dc3545'">
+                            &times;
+                        </button>
+                    </div>
+                }
+
+                <button class="btn w-100 mt-4"
+                        @onclick="ClearAll"
+                        style="background-color: transparent; border: 1px solid #dc3545; color: #dc3545; font-weight: bold; font-size: 0.95rem; padding: 0.6rem; letter-spacing: 1px; border-radius: 6px; transition: all 0.2s;"
+                        onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='white';"
+                        onmouseout="this.style.backgroundColor='transparent'; this.style.color='#dc3545';">
+                    CLEAR ALL
+                </button>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private string newTaskText = string.Empty;
+
+    // Default items populated exactly as shown in your design layout
+    private List<string> tasks = new List<string>
+    {
+        "Completing Assignments",
+        "Revising Lectures",
+        "Going Out"
+    };
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskText))
+        {
+            tasks.Add(newTaskText.Trim());
+            newTaskText = string.Empty;
+        }
+    }
+
+    private void RemoveTask(string taskToRemove)
+    {
+        tasks.Remove(taskToRemove);
+    }
+
+    private void ClearAll()
+    {
+        tasks.Clear();
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            AddTask();
+        }
+    }
+}

@@ -1,0 +1,23 @@
+﻿@page "/notify-config-panel"
+@inject NotificationConfig CoreSettings
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+
+<div class="glass-panel mx-auto" style="max-width: 550px;">
+    <h4 style="color: var(--neon-lilac);" class="mb-4 text-center">Runtime Service Core Parameters</h4>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Telemetry Poll Batch Size Limit</label>
+        <input type="number" class="form-control neon-input" @bind="CoreSettings.DefaultNumberOfNotifications" min="1" max="5" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Layout Structural Rendering Density Mode</label>
+        <select class="form-select neon-input" @bind="CoreSettings.NotificationStyle">
+            <option value="Compact">Compact String Stream</option>
+            <option value="Detailed">Detailed Diagnostics Frame</option>
+        </select>
+    </div>
+</div>

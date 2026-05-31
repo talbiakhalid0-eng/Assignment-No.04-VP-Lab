@@ -1,0 +1,48 @@
+﻿@page "/persistent-theme"
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<div class="container mt-5">
+    <div class="card shadow border-0 rounded-4" style="max-width: 400px; margin: auto;">
+        <div class="card-header bg-secondary text-white text-center py-3">
+            <h4 class="mb-0">Theme Portal</h4>
+        </div>
+        <div class="card-body p-4 text-center">
+            <button class="btn btn-outline-primary btn-lg" @onclick="ToggleTheme">
+                @(isDarkMode ? "🌞 Switch to Light Mode" : "🌙 Switch to Dark Mode")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isDarkMode = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var cachedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "app-current-theme");
+            isDarkMode = (cachedTheme == "dark");
+            await ApplyTheme(isDarkMode ? "dark" : "light");
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        isDarkMode = !isDarkMode;
+        string theme = isDarkMode ? "dark" : "light";
+
+        await JS.InvokeVoidAsync("localStorage.setItem", "app-current-theme", theme);
+        await ApplyTheme(theme);
+    }
+
+    private async Task ApplyTheme(string theme)
+    {
+        // Calling the global helper we created in App.razor
+        await JS.InvokeVoidAsync("themeManager.apply", theme);
+    }
+}

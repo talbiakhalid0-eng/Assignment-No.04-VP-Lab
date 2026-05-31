@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+
+    <title>Assignment No.04</title>
+
+    <link rel="icon" type="image/png" href="Images/server.png" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f4f6f9;
+            height: 100%;
+        }
+
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Target Sidebar Navigation styling */
+        .app-sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #031549 0%, #1a0b36 100%);
+            flex-shrink: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-link {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+            .nav-link:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: #ffffff !important;
+            }
+
+            .nav-link.active {
+                background: rgba(255, 255, 255, 0.15) !important;
+                color: #ffffff !important;
+                font-weight: 500;
+            }
+
+        /* Main Content Layout Panels */
+        .main-content-window {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+
+        .top-header-banner {
+            background-color: #ffffff;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .banner-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #4e73df;
+            letter-spacing: 1px;
+        }
+
+        .about-link {
+            color: #858796;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Clean Card Presentation Layout Wrapper */
+        .interactive-card-frame {
+            max-width: 550px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border: 1px solid #e3e6f0;
+            overflow: hidden;
+        }
+
+        .card-header-accent {
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.75rem 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        .card-body-content {
+            padding: 2rem;
+        }
+
+        .greeting-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #198754; /* Forest Green match */
+            text-align: center;
+        }
+    </style>
+    <HeadOutlet />
+</head>
+
+
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <script src="_framework/blazor.web.js"></script>
+    <script>
+        window.themeManager = {
+            apply: (themeName) => {
+                // This removes old classes and adds the new one
+                document.body.classList.remove('dark-theme', 'light-theme');
+                document.body.classList.add(themeName + '-theme');
+            }
+        };
+    </script>
+</body>
+
+</html>
